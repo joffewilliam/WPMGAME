@@ -402,13 +402,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
                 theme={theme}
               />
             ) : (
-              <div className={`text-center ${theme.textColor} opacity-70 italic mt-2`}>
-                {!startTime ? (
-                  <p>Click anywhere and start typing {gameMode === "quotes" ? "exactly what you see" : "the text"} to begin...</p>
-                ) : (
-                  <p>Keep typing! The clock is ticking...</p>
-                )}
-              </div>
+                {/* Mode switcher / game controls could go here if needed */}
             )}
             {/* Reset button at the bottom */}
             <div className="flex justify-center mt-8">
