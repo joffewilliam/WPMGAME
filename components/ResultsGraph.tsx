@@ -48,8 +48,17 @@ const ResultsGraph: React.FC<ResultsGraphProps> = ({ data, width = 900, height =
     if (!canvasRef.current || data.length === 0) return;
 
     const canvas = canvasRef.current;
+    
+    // Adjust canvas for device pixel ratio for sharper rendering
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = width * dpr;
+    canvas.height = height * dpr;
+
     const ctx = canvas.getContext('2d');
     if (!ctx) return;
+
+    // Scale the context to draw everything at the higher resolution
+    ctx.scale(dpr, dpr);
 
     // Add padding to prevent cutting off labels
     const padding = {
