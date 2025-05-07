@@ -1,0 +1,71 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Add custom utility for proper word wrapping */
+.overflow-wrap-anywhere {
+  overflow-wrap: anywhere;
+  word-break: normal;
+  word-wrap: break-word;
+  -webkit-hyphens: none;
+  hyphens: none;
+}
+
+/* Ensure the layout respects word boundaries */
+span {
+  display: inline-block;
+}
+
+/* Improve the caret animation */
+@keyframes caretPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.animate-pulse {
+  animation: caretPulse 1s ease-in-out infinite;
+}
+
+/* Make sure the cursor is a pointer everywhere to hint that clicking focuses the input */
+body {
+  cursor: text;
+}
+
+.caret-pos {
+  left: 0px;
+  top: 15%;
+}
+.caret-pos-space {
+  left: 2px;
+  top: 15%;
+}
+
+/* But use default cursor on buttons */
+button {
+  cursor: pointer;
+}
+
+/* Graph styling without inline styles */
+.graph-container {
+  width: attr(data-width px);
+  height: attr(data-height px);
+}
+
+/* Fallback for browsers that don't support attr() in all contexts */
+[data-width][data-height] {
+  width: var(--graph-width, attr(data-width px));
+  height: var(--graph-height, attr(data-height px));
+}
+
+/* Additional class to set widths directly */
+[data-width="900"] {
+  width: 900px;
+}
+
+[data-width="600"] {
+  width: 600px;
+}
+
+[data-height="300"] {
+  height: 300px;
+}
