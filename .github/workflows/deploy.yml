@@ -11,7 +11,7 @@ permissions:
   pages: write
   id-token: write
 
-#Concurrency ensures that only one deployment runs at a time for this group
+# Concurrency ensures that only one deployment runs at a time for this group
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -21,10 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4 # Updated to v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4 # Updated to v4
         with:
           node-version: "18" # Specify your Node.js version
           cache: 'npm'
@@ -34,14 +34,13 @@ jobs:
 
       # Configure GitHub Pages
       - name: Setup Pages
-        uses: actions/configure-pages@v3 # Or a newer version like @v4 or @v5 if preferred
+        uses: actions/configure-pages@v5 # Updated to v5
 
       - name: Build Next.js site
-        run: npm run build # This command should trigger 'next build' which handles static export
-                          # Ensure your next.config.js has `output: 'export'`
+        run: npm run build # This command should trigger 'next build'
 
       - name: Upload artifact for GitHub Pages
-        uses: actions/upload-pages-artifact@v2 # Using v2, v3 is also available
+        uses: actions/upload-pages-artifact@v3 # Updated to v3
         with:
           # Path to the directory to upload (default for Next.js static export is 'out')
           path: './out'
@@ -55,4 +54,4 @@ jobs:
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
-        uses: actions/deploy-pages@v2 # Using v2, v4 is also available
+        uses: actions/deploy-pages@v4 # Updated to v4
