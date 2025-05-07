@@ -402,7 +402,8 @@ const TypingTest: React.FC<TypingTestProps> = ({
                 theme={theme}
               />
             ) : (
-                {/* Mode switcher / game controls could go here if needed */}
+              /* Mode switcher / game controls could go here if needed */
+              null
             )}
             {/* Reset button at the bottom */}
             <div className="flex justify-center mt-8">
