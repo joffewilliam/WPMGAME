@@ -47,14 +47,14 @@ button {
 
 /* Graph styling without inline styles */
 .graph-container {
-  width: attr(data-width px);
-  height: attr(data-height px);
+  width: var(--graph-width, attr(data-width px)); /* Fallback to attr if --graph-width is not set */
+  height: var(--graph-height, attr(data-height px)); /* Fallback to attr if --graph-height is not set */
 }
 
 /* Fallback for browsers that don't support attr() in all contexts */
 [data-width][data-height] {
-  width: var(--graph-width, attr(data-width px));
-  height: var(--graph-height, attr(data-height px));
+  width: var(--graph-width);
+  height: var(--graph-height);
 }
 
 /* Additional class to set widths directly */

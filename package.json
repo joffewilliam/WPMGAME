@@ -4,9 +4,9 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
-    "start": "next start",
-    "export": "next export"
+    "build": "next build", // This will perform the static export due to `output: 'export'`
+    "start": "next start", // Primarily for local testing of a production build, not used for static export
+    "export": "next export" // Redundant if `output: 'export'` is in next.config.js, but harmless
   },
   "dependencies": {
     "chart.js": "^4.4.9",
