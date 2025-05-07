@@ -94,9 +94,12 @@ const TypingTest: React.FC<TypingTestProps> = ({
       setCurrentParagraphIdx(0);
     }
 
-    if (inputRef.current) {
-      inputRef.current.focus();
-    }
+    // Add a slight delay before focusing the input to ensure the DOM is ready
+    setTimeout(() => {
+      if (inputRef.current) {
+        inputRef.current.focus();
+      }
+    }, 100);
   }, [gameMode, normalWordCount, testTime]);
 
   // Reset when mode, word count, or test time changes
@@ -146,6 +149,18 @@ const TypingTest: React.FC<TypingTestProps> = ({
     
     return () => clearInterval(trackInterval);
   }, [startTime, isFinished, userInput.length, totalCharsTyped, correctChars, errors, testTime]);
+
+  // Add this new useEffect hook near your other useEffect hooks
+  useEffect(() => {
+    // Focus the input field after initial render and whenever the test is reset
+    const timer = setTimeout(() => {
+      if (inputRef.current && !isFinished) {
+        inputRef.current.focus();
+      }
+    }, 200);
+    
+    return () => clearTimeout(timer);
+  }, [sentence, isFinished]); // Re-run when sentence changes or test finishes
 
   // Update parent component when test status changes
   useEffect(() => {
@@ -385,6 +400,9 @@ const TypingTest: React.FC<TypingTestProps> = ({
               autoCapitalize="off"
               aria-label="Typing test input"
               title="Typing test input"
+              // Add onFocus and onClick handlers to ensure input receives events
+              onFocus={(e) => e.target.focus()}
+              onClick={(e) => e.stopPropagation()}
             />
             
             <StatsDisplay 
