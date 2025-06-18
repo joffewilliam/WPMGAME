@@ -1,6 +1,8 @@
 # Unnamed Typing Challenge
 
-This Typing Challenge is a fun and engaging typing game designed to test your typing speed and accuracy across various game modes. I thought it would be fun to have a typing test that lets you relive your xbox 360 vibes with some profanity as well. My insperation was MonkeyType, but I did not use any code from them. Thanks!
+I currently don't know what to call this. I built this based off a blank tailwind react blank project.
+If you get offended easily, I would avoid this project. I built this after I got cussed out on a video game by someone who was easily typing 140 wpm. 
+His perfect spelling and passion outweighed my disgust with what he was typing. I knew I had to make something. 
 
 ## Features
 
@@ -58,15 +60,7 @@ This Typing Challenge is a fun and engaging typing game designed to test your ty
 - **Styling**: Tailwind CSS with custom themes
 
 ## Screenshots
-
-### Home Page
-![Home Page](https://via.placeholder.com/800x400?text=Home+Page)
-
-### Typing Test
-![Typing Test](https://via.placeholder.com/800x400?text=Typing+Test)
-
-### Results Page
-![Results Page](https://via.placeholder.com/800x400?text=Results+Page)
+(TODO)
 
 ## Contributing
 
@@ -90,12 +84,3 @@ Contributions are welcome! If you'd like to contribute, please follow these step
 ## License
 
 This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
-
-## Acknowledgments
-
-- Inspired by the idea of making typing tests more fun and engaging.
-- Special thanks to all contributors and testers.
-
----
-
-Enjoy the game and improve your typing skills!
