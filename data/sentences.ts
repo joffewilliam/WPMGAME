@@ -11,17 +11,19 @@ import { explicitWords } from "./explicitWords";
 import { quotes, ParagraphQuote } from "./quotes";
 
 // Generate a sentence of random normal words
-export function getRandomNormalSentence(wordCount: number = 15): string {
+export function getRandomNormalSentence(wordCount: number = 15, capitalize: boolean = true): string {
   let sentence = '';
   for (let i = 0; i < wordCount; i++) {
     const randomWord = normalWords[Math.floor(Math.random() * normalWords.length)];
     sentence += randomWord + (i < wordCount - 1 ? ' ' : '');
   }
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  return capitalize ? 
+    sentence.charAt(0).toUpperCase() + sentence.slice(1) : 
+    sentence;
 }
 
 // Generate a sentence of random explicit words mixed with common words
-export function getRandomExplicitSentence(wordCount: number = 15, explicitRatio: number = 0.4): string {
+export function getRandomExplicitSentence(wordCount: number = 15, explicitRatio: number = 0.4, capitalize: boolean = true): string {
   let sentence = '';
   for (let i = 0; i < wordCount; i++) {
     const useExplicit = Math.random() < explicitRatio;
@@ -29,7 +31,9 @@ export function getRandomExplicitSentence(wordCount: number = 15, explicitRatio:
     const randomWord = wordPool[Math.floor(Math.random() * wordPool.length)];
     sentence += randomWord + (i < wordCount - 1 ? ' ' : '');
   }
-  return sentence.charAt(0).toUpperCase() + sentence.slice(1) + '.';
+  return capitalize ? 
+    sentence.charAt(0).toUpperCase() + sentence.slice(1) : 
+    sentence;
 }
 
 // Get a random paragraph from the list

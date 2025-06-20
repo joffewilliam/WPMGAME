@@ -2,40 +2,82 @@
  * StatsDisplay Component
  * 
  * Displays real-time statistics during the typing test:
- * - Time remaining in the current test
- * - Total characters typed so far
- * - Current user input length
+ * - WPM (Words Per Minute)
+ * - Accuracy percentage
+ * - Error count
+ * - Elapsed time in the current test
+ * - Progress (words/quotes completed)
+ * - Game mode
  * 
  * Props:
- * - timeLeft: Seconds remaining in the test
- * - totalCharsTyped: Total characters typed so far (excluding current input)
- * - userInputLength: Length of current user input
- * - theme: Current theme colors
+ * - wpm: Words per minute (can be null if test not finished)
+ * - accuracy: Typing accuracy percentage
+ * - errors: Number of typing errors
+ * - elapsedTime: Seconds elapsed in the test
+ * - isFinished: Whether the test is complete
+ * - typingData: Array of data points for visualization
+ * - gameMode: The current game mode
+ * - progress: Current progress (words/quotes completed)
+ * - target: Target words/quotes to complete
  */
 import React from 'react';
-import { ThemeColors } from '../../contexts/ThemeContext';
+import { DataPoint, GameMode } from '../TypingTest';
 
 interface StatsDisplayProps {
-  timeLeft: number;
-  totalCharsTyped: number;
-  userInputLength: number;
-  theme: ThemeColors;
+  wpm: number | null;
+  accuracy: number;
+  errors: number;
+  elapsedTime: number;
+  isFinished: boolean;
+  typingData: DataPoint[];
+  gameMode: GameMode;
+  progress: number;
+  target: number;
 }
 
 const StatsDisplay: React.FC<StatsDisplayProps> = ({ 
-  timeLeft, 
-  totalCharsTyped, 
-  userInputLength,
-  theme 
+  wpm, 
+  accuracy, 
+  errors, 
+  elapsedTime,
+  isFinished,
+  typingData,
+  gameMode,
+  progress,
+  target
 }) => {
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return mins > 0 ? `${mins}:${secs.toString().padStart(2, '0')}` : `${secs}s`;
+  };
+
+  const progressLabel = gameMode === "quotes" ? "Quotes" : "Words";
+
   return (
-    <div className="flex justify-center gap-8 items-center font-medium select-none mb-8">
-      <span className={`text-lg ${theme.textColor}`}>
-        Time: <span className={`font-bold ${theme.primaryColor}`}>{timeLeft}s</span>
-      </span>
-      <span className={`text-lg ${theme.textColor}`}>
-        Chars: <span className={`font-bold ${theme.primaryColor}`}>{totalCharsTyped + userInputLength}</span>
-      </span>
+    <div className="stats-display">
+      <div className="stat-group">
+        <div className="stat">
+          <span className="stat-label">WPM:</span>
+          <span className="stat-value">{wpm || 0}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Accuracy:</span>
+          <span className="stat-value">{accuracy}%</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Errors:</span>
+          <span className="stat-value">{errors}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">Time:</span>
+          <span className="stat-value">{formatTime(elapsedTime)}</span>
+        </div>
+        <div className="stat">
+          <span className="stat-label">{progressLabel}:</span>
+          <span className="stat-value">{progress}/{target}</span>
+        </div>
+      </div>
     </div>
   );
 };

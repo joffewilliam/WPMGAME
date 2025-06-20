@@ -30,7 +30,7 @@ const themes = [
 
 const SettingsPage = () => {
   const router = useRouter();
-  const { theme, setTheme, themeMode, setThemeMode } = useTheme();
+  const { theme, setTheme, themeMode, setThemeMode, capitalization, setCapitalization } = useTheme();
   const [randomizeSetting, setRandomizeSetting] = useState<'off' | 'on' | 'favorite' | 'light' | 'dark' | 'custom'>('off');
   const [savedSettings, setSavedSettings] = useState(false);
 
@@ -72,6 +72,31 @@ const SettingsPage = () => {
     setSavedSettings(true);
     
     // Reset the saved notification after a delay
+    setTimeout(() => {
+      setSavedSettings(false);
+    }, 2000);
+  };
+
+  const handleCapitalizationToggle = () => {
+    setCapitalization({
+      ...capitalization,
+      enabled: !capitalization.enabled
+    });
+    setSavedSettings(true);
+    setTimeout(() => {
+      setSavedSettings(false);
+    }, 2000);
+  };
+
+  const handleCapitalizationModeToggle = (mode: 'normal' | 'explicit' | 'quotes') => {
+    setCapitalization({
+      ...capitalization,
+      modes: {
+        ...capitalization.modes,
+        [mode]: !capitalization.modes[mode]
+      }
+    });
+    setSavedSettings(true);
     setTimeout(() => {
       setSavedSettings(false);
     }, 2000);
@@ -162,6 +187,69 @@ const SettingsPage = () => {
                   {themeOption.label}
                 </button>
               ))}
+            </div>
+          </div>
+
+          {/* New card for capitalization settings */}
+          <div className={`${theme.cardBg} rounded-lg shadow-md p-6 mb-8`}>
+            <div className="flex justify-between items-center mb-3">
+              <h2 className={`text-xl font-semibold ${theme.textColor}`}>Capitalization</h2>
+              <button
+                onClick={handleCapitalizationToggle}
+                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                  capitalization.enabled ? 'bg-blue-600' : `${theme.buttonBg} opacity-60`
+                }`}
+                aria-label={capitalization.enabled ? "Disable capitalization" : "Enable capitalization"}
+              >
+                <span
+                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                    capitalization.enabled ? 'translate-x-6' : 'translate-x-1'
+                  }`}
+                />
+              </button>
+            </div>
+            
+            <p className={`mb-4 text-sm ${theme.textColor} opacity-70`}>
+              {capitalization.enabled ? 'Sentences will be capitalized according to mode settings below.' : 'All text will be lowercase.'}
+            </p>
+            
+            <div className={`mt-3 ${!capitalization.enabled ? 'opacity-50' : ''}`}>
+              <h3 className={`text-md font-medium mb-2 ${theme.textColor}`}>Apply to modes:</h3>
+              <div className="flex flex-wrap gap-3">
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="cap-normal"
+                    checked={capitalization.modes.normal}
+                    onChange={() => handleCapitalizationModeToggle('normal')}
+                    disabled={!capitalization.enabled}
+                    className="w-4 h-4 rounded"
+                  />
+                  <label htmlFor="cap-normal" className={theme.textColor}>Normal</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="cap-explicit"
+                    checked={capitalization.modes.explicit}
+                    onChange={() => handleCapitalizationModeToggle('explicit')}
+                    disabled={!capitalization.enabled}
+                    className="w-4 h-4 rounded"
+                  />
+                  <label htmlFor="cap-explicit" className={theme.textColor}>Explicit</label>
+                </div>
+                <div className="flex items-center gap-2">
+                  <input
+                    type="checkbox"
+                    id="cap-quotes"
+                    checked={capitalization.modes.quotes}
+                    onChange={() => handleCapitalizationModeToggle('quotes')}
+                    disabled={!capitalization.enabled}
+                    className="w-4 h-4 rounded"
+                  />
+                  <label htmlFor="cap-quotes" className={theme.textColor}>Quotes</label>
+                </div>
+              </div>
             </div>
           </div>
 

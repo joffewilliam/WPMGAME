@@ -12,30 +12,39 @@ import ResultsGraph from '../ResultsGraph';
 import { DataPoint } from '../TypingTest';
 
 interface ResultsPanelProps {
-  wpm: number;
+  wpm: number | null;
+  accuracy: number;
+  errors: number;
+  onRestart: () => void;
   typingData: DataPoint[];
-  handleRestart: () => void;
-  theme: ThemeColors;
+  elapsedTime: number;
+  totalCharsTyped: number;
+  theme?: ThemeColors;
 }
 
 const ResultsPanel: React.FC<ResultsPanelProps> = ({ 
   wpm, 
+  accuracy,
+  errors,
+  onRestart,
   typingData,
-  handleRestart,
-  theme
+  elapsedTime,
+  totalCharsTyped,
+  theme = {
+    textColor: 'text-gray-800',
+    primaryColor: 'text-blue-600',
+    successColor: 'text-green-600',
+    cardBg: 'bg-white',
+    themeMode: 'light'
+  }
 }) => {
-  // Calculate accuracy from the last data point
-  const accuracy = typingData.length > 0 
-    ? typingData[typingData.length - 1].accuracy 
-    : 0;
-
   return (
-    <div className={`text-center p-6 ${theme.cardBg} rounded-md border ${theme.themeMode === 'dark' ? 'border-gray-700' : 'border-gray-200'} max-w-2xl w-full mx-auto`}>
+    <div className={`text-center p-0 max-w-2xl w-full mx-auto`}>
       <div className="flex flex-col md:flex-row justify-center items-center gap-6 mb-4">
         <div>
           <p className={`text-xl sm:text-2xl font-semibold ${theme.textColor}`}>
             Game Over! Your WPM:
-            <span className={`text-3xl sm:text-4xl font-bold ${theme.primaryColor} ml-2`}>{wpm}</span>
+            <span className={`text-3xl sm:text-4xl font-bold ${theme.primaryColor} ml-2`}>{wpm || 0}</span>
           </p>
         </div>
         <div>
@@ -45,33 +54,27 @@ const ResultsPanel: React.FC<ResultsPanelProps> = ({
           </p>
         </div>
       </div>
-      
-      {/* Graph section with full width */}
+        {/* Graph section with full width */}
       <div className="mt-6 mb-6">
         <h3 className={`${theme.textColor} font-semibold mb-2`}></h3>
-        
         <div className="mx-auto w-full overflow-x-auto">
-          {typingData.length > 1 ? (
+          {typingData && typingData.length > 0 && (
             <ResultsGraph 
               data={typingData} 
               width={600} 
               height={300}
-              theme={theme.themeMode === 'light' ? 'light' : 'dark'} 
+              elapsedTime={elapsedTime}
             />
-          ) : (
-            <div className={`h-[300px] flex items-center justify-center ${theme.textColor} opacity-70`}>
-              <p>Not enough typing data collected. Try typing more next time!</p>
-            </div>
           )}
         </div>
       </div>
       
-      {/* <button
-        onClick={handleRestart}
+      <button
+        onClick={onRestart}
         className="mt-6 bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-6 rounded-lg transition duration-200 ease-in-out transform hover:scale-105"
       >
         Play Again?
-      </button> */}
+      </button>
     </div>
   );
 };

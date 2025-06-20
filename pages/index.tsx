@@ -22,13 +22,20 @@ export default function TypingChallenge() {
     setIsTestRunning(isRunning);
   };
 
+  // Add a click handler to ensure input stays focused
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // Don't interfere with button clicks or other interactive elements
+    if ((e.target as HTMLElement).tagName === 'BUTTON') {
+      return;
+    }
+    // The TypingTest component will handle focusing its input
+  };
   return (
-    <div className={`${theme.mainBg} flex flex-col min-h-screen transition-all duration-500 ease-in-out`}>
-      <Header 
+    <div 
+      className={`${theme.mainBg} flex flex-col min-h-screen transition-all duration-500 ease-in-out`}
+      onClick={handleContainerClick}
+    >      <Header 
         currentPage="home" 
-        gameMode={gameMode}
-        onModeChange={handleModeChange}
-        isModeDisabled={isTestRunning}
       />
       <main className="flex-grow flex flex-col items-center justify-center p-4 sm:p-6 font-sans">
         <div className="w-full max-w-4xl py-8">

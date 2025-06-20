@@ -206,25 +206,49 @@ const themeCollection: Record<string, ThemeColors> = {
   }
 };
 
-type ThemeContextType = {
-  theme: ThemeColors;
-  setTheme: (themeName: string) => void;
-  themeMode: ThemeMode;
-  setThemeMode: (mode: ThemeMode) => void;
-  cussingBg: string;
+export type CapitalizationSettings = {
+  enabled: boolean;
+  modes: {
+    normal: boolean;
+    explicit: boolean;
+    quotes: boolean;
+  };
 };
 
-const ThemeContext = createContext<ThemeContextType>({
-  theme: darkTheme,
+export const ThemeContext = createContext<{
+  theme: ThemeColors;
+  setTheme: (name: string) => void;
+  themeMode: 'light' | 'dark' | 'system';
+  setThemeMode: (mode: 'light' | 'dark' | 'system') => void;
+  capitalization: CapitalizationSettings;
+  setCapitalization: (settings: CapitalizationSettings) => void;
+}>({
+  theme: darkTheme, // Use darkTheme instead of themes.dark
   setTheme: () => {},
   themeMode: 'system',
   setThemeMode: () => {},
-  cussingBg: 'bg-gradient-to-br from-gray-900 via-red-900 to-gray-900',
+  capitalization: {
+    enabled: true,
+    modes: {
+      normal: true,
+      explicit: true,
+      quotes: true
+    }
+  },
+  setCapitalization: () => {}
 });
 
 export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [themeMode, setThemeMode] = useState<ThemeMode>('system');
   const [theme, setThemeState] = useState<ThemeColors>(darkTheme);
+  const [capitalization, setCapitalization] = useState<CapitalizationSettings>({
+    enabled: true,
+    modes: {
+      normal: true,
+      explicit: true,
+      quotes: true
+    }
+  });
   
   // Effect to handle system preference and load saved preferences
   useEffect(() => {
@@ -283,16 +307,35 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     }
   };
 
-  // Custom background for when cussing
-  const cussingBg = 'bg-gradient-to-br from-gray-900 via-red-900 to-gray-900';
-
+  // Load capitalization settings from localStorage
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const savedCapitalization = localStorage.getItem('capitalization');
+      if (savedCapitalization) {
+        try {
+          setCapitalization(JSON.parse(savedCapitalization));
+        } catch (e) {
+          console.error('Failed to parse capitalization settings');
+        }
+      }
+    }
+  }, []);
+  
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, themeMode, setThemeMode, cussingBg }}>
+    <ThemeContext.Provider value={{ 
+      theme: theme, // or just `theme` in shorthand
+      setTheme, 
+      themeMode, 
+      setThemeMode,
+      capitalization,
+      setCapitalization: (settings) => {
+        setCapitalization(settings);
+        localStorage.setItem('capitalization', JSON.stringify(settings));
+      }
+    }}>
       {children}
     </ThemeContext.Provider>
   );
 };
 
 export const useTheme = () => useContext(ThemeContext);
-
-export default ThemeContext;

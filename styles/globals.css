@@ -19,10 +19,14 @@ span {
 /* Improve the caret animation */
 @keyframes caretPulse {
   0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+  50% { opacity: 0.3; }
 }
 
 .animate-pulse {
+  animation: caretPulse 1s ease-in-out infinite;
+}
+
+.animate-blink {
   animation: caretPulse 1s ease-in-out infinite;
 }
 
@@ -31,18 +35,83 @@ body {
   cursor: text;
 }
 
+/* Improved caret positioning - appears to the left of next character */
 .caret-pos {
-  left: 0px;
-  top: 15%;
+  position: absolute;
+  left: -8px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
 }
 .caret-pos-space {
-  left: 2px;
-  top: 15%;
+  position: absolute;
+  left: -5px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+.caret-pos-after-word {
+  position: absolute;
+  left: 8px;
+  top: 0;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  z-index: 10;
+  pointer-events: none;
+}
+
+/* Remove outline, box-shadow, and background for the caret classes */
+.caret-pos, .caret-pos-space, .caret-pos-after-word {
+  outline: none !important;
+  box-shadow: none !important;
+  background: none !important;
+  border: none !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 /* But use default cursor on buttons */
 button {
   cursor: pointer;
+}
+
+/* StatsDisplay styling */
+.stats-display {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.stat-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  justify-content: center;
+}
+
+.stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.stat-label {
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #6b7280;
+}
+
+.stat-value {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #3b82f6;
 }
 
 /* Graph styling without inline styles */
@@ -68,4 +137,80 @@ button {
 
 [data-height="300"] {
   height: 300px;
+}
+
+/* Hide the typing input but keep it functional and focusable */
+.user-input {
+  position: fixed;
+  top: -9999px;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  opacity: 0.01; /* Very small opacity to maintain focusability */
+  pointer-events: none;
+  z-index: 1000;
+  border: none;
+  background: transparent;
+}
+
+/* Restart button styling */
+.restart-button-container {
+  display: flex;
+  justify-content: center;
+  margin: 1.5rem 0;
+}
+
+.restart-button {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.5rem 1rem;
+  background-color: #3b82f6;
+  color: white;
+  border-radius: 0.375rem;
+  font-weight: 600;
+  transition: all 0.2s;
+}
+
+.restart-button:hover {
+  background-color: #2563eb;
+  transform: scale(1.05);
+}
+
+.restart-icon {
+  width: 1.25rem;
+  height: 1.25rem;
+}
+
+.caret-inline {
+  display: inline-block;
+  width: 1px;
+  height: 1em;
+  vertical-align: middle;
+  background: currentColor;
+  margin: 0 0.5px;
+  outline: none;
+  box-shadow: none;
+  background-clip: padding-box;
+  border: none;
+  padding: 0;
+  transition: opacity 0.1s;
+}
+.caret-inline[style*="opacity: 0"] {
+  opacity: 0 !important;
+}
+.caret-inline-hidden {
+  opacity: 0 !important;
+}
+
+.word-block {
+  white-space: pre;
+  display: inline-block;
+}
+.text-display-block {
+  white-space: pre-wrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  -webkit-hyphens: none;
+  hyphens: none;
 }
