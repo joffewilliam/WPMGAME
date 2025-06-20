@@ -35,12 +35,6 @@ interface ResultsGraphProps {
 }
 
 const ResultsGraph: React.FC<ResultsGraphProps> = ({ data, width, height, elapsedTime }) => {
-  // Use inline styles instead of dynamic Tailwind classes
-  const graphStyle = {
-    width: `${width}px`,
-    height: `${height}px`,
-  };
-  
   const chartData = {
     labels: data.map((point, index) => `${index + 1}`),
     datasets: [
@@ -91,7 +85,7 @@ const ResultsGraph: React.FC<ResultsGraphProps> = ({ data, width, height, elapse
   };
 
   return (
-    <div className="rounded-lg bg-white dark:bg-gray-800 p-4" style={graphStyle}>
+    <div className="results-graph-container">
       <Line data={chartData} options={options} />
     </div>
   );

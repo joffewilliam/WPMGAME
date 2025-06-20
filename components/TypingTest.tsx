@@ -110,7 +110,8 @@ const TypingTest: React.FC<TypingTestProps> = ({
     } else if (gameMode === "explicit") {
       setSentence(getRandomExplicitSentence(wordCount));
     } else {
-      setSentence(getRandomParagraph() as unknown as string);
+      const quoteObj = getRandomParagraph();
+      setSentence(quoteObj.text);
     }
   };
 
