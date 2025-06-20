@@ -21,7 +21,6 @@
     "react-dom": "latest"
   },
   "devDependencies": {
-    "@next/swc-win32-x64-msvc": "^15.1.8",
     "@types/node": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
