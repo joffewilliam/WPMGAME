@@ -1,9 +1,4 @@
 import React from "react";
-import {
-  getRandomExplicitSentence,
-  getRandomNormalSentence,
-  getRandomParagraph
-} from "../data/sentences";
 import Header from "../components/Header";
 import TypingTest, { GameMode } from "../components/TypingTest";
 import { useTheme } from "../contexts/ThemeContext";
@@ -47,7 +42,7 @@ export default function TypingChallenge() {
         </div>
         <footer className={`mt-auto pt-12 ${theme.textColor} text-center text-sm opacity-80 max-w-2xl mx-auto px-4`}>
           <p>
-            Warning: This typing test contains strong language, particularly in Explicit mode.
+            Warning: This typing test can include heated chat-style language, especially in Gamer mode.
           </p>
           <p>
             This project is made by William Joffe and is meant for educational purposes only.

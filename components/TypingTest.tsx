@@ -2,12 +2,13 @@
  * TypingTest Component
  * 
  * Core component that manages the typing test functionality:
- * - Handles multiple game modes (normal, explicit, paragraphs)
+ * - Handles multiple game modes (normal, gamer, paragraphs)
  * - Tracks typing metrics (WPM, accuracy, errors)
  * - Manages test timing and state
  * - Collects performance data for results display
+ * - Supports words/sentences text style toggles
  */
-import React, { useState, useEffect } from "react";
+import React, { useRef, useState, useEffect } from "react";
 import { useTheme } from "../contexts/ThemeContext";
 import { calculateWPM, calculateAccuracy } from "../utils/calculations";
 import TextDisplay from "./typing/TextDisplay";
@@ -15,13 +16,17 @@ import ResultsPanel from "./typing/ResultsPanel";
 import StatsDisplay from "./typing/StatsDisplay";
 import GameModeSelector from "./typing/GameModeSelector";
 import {
+  GamerGame,
+  SentenceStyle,
+  getRandomGameWordSentence,
+  gamerGameOptions,
+  getGamerChatSentence,
+  getNormalChatSentence,
   getRandomNormalSentence,
-  getRandomExplicitSentence,
   getRandomParagraph
 } from "../data/sentences";
-import type { ParagraphQuote } from "../data/quotes";
 
-export type GameMode = "explicit" | "normal" | "quotes";
+export type GameMode = "gamer" | "normal" | "quotes";
 export type DataPoint = { second: number; wpm: number; accuracy: number; errors: number; };
 
 const upsertDataPoint = (prev: DataPoint[], point: DataPoint): DataPoint[] => {
@@ -45,6 +50,8 @@ const applyCapitalization = (text: string, shouldCapitalize: boolean): string =>
   return shouldCapitalize ? text : text.toLowerCase();
 };
 
+const MAX_RECENT_SENTENCES = 18;
+
 type TypingTestProps = {
   gameMode?: GameMode;
   onGameModeChange?: (mode: GameMode) => void;
@@ -58,6 +65,8 @@ const TypingTest: React.FC<TypingTestProps> = ({
 }) => {
   const { theme, capitalization } = useTheme();
   const [gameMode, setGameMode] = useState<GameMode>(externalGameMode || "normal");
+  const [sentenceStyle, setSentenceStyle] = useState<SentenceStyle>("sentences");
+  const [selectedGame, setSelectedGame] = useState<GamerGame>("counter_strike");
   const [wordCount, setWordCount] = useState<number>(25);
   const [quoteCount, setQuoteCount] = useState<number>(3);
   const [userInput, setUserInput] = useState("");
@@ -68,6 +77,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
   const [typingData, setTypingData] = useState<DataPoint[]>([]);
+  const recentSentenceMapRef = useRef<Record<string, string[]>>({});
 
   const shouldCapitalizeForMode = (mode: GameMode): boolean => {
     if (!capitalization.enabled) {
@@ -75,6 +85,53 @@ const TypingTest: React.FC<TypingTestProps> = ({
     }
 
     return capitalization.modes[mode];
+  };
+
+  const getHistoryKey = (mode: GameMode): string => {
+    if (mode !== "gamer") {
+      return `${mode}:${sentenceStyle}`;
+    }
+
+    return `${mode}:${selectedGame}:${sentenceStyle}`;
+  };
+
+  const withAntiRepeat = (key: string, createCandidate: () => string): string => {
+    const recent = recentSentenceMapRef.current[key] || [];
+    let candidate = createCandidate();
+    let attempts = 0;
+
+    while (recent.includes(candidate) && attempts < 25) {
+      candidate = createCandidate();
+      attempts += 1;
+    }
+
+    const next = [...recent, candidate].slice(-MAX_RECENT_SENTENCES);
+    recentSentenceMapRef.current[key] = next;
+    return candidate;
+  };
+
+  const generateModeText = (mode: GameMode): string => {
+    const historyKey = getHistoryKey(mode);
+    if (mode === "quotes") {
+      return withAntiRepeat(historyKey, () =>
+        applyCapitalization(generateQuotesText(quoteCount), shouldCapitalizeForMode("quotes"))
+      );
+    }
+
+    const shouldCapitalize = shouldCapitalizeForMode(mode);
+    if (mode === "normal") {
+      return withAntiRepeat(historyKey, () =>
+        sentenceStyle === "sentences"
+          ? getNormalChatSentence(shouldCapitalize)
+          : getRandomNormalSentence(wordCount, shouldCapitalize)
+      );
+    }
+
+    return withAntiRepeat(historyKey, () =>
+      sentenceStyle === "sentences"
+        ? getGamerChatSentence(selectedGame, shouldCapitalize)
+        : getRandomGameWordSentence(selectedGame, wordCount, 0.7, shouldCapitalize)
+    );
   };
 
   // Start timer on first input
@@ -137,13 +194,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
     setEndTime(null);
     setTypingData([]);
     // Regenerate sentence
-    if (gameMode === "normal") {
-      setSentence(getRandomNormalSentence(wordCount, shouldCapitalizeForMode("normal")));
-    } else if (gameMode === "explicit") {
-      setSentence(getRandomExplicitSentence(wordCount, 0.4, shouldCapitalizeForMode("explicit")));
-    } else {
-      setSentence(applyCapitalization(generateQuotesText(quoteCount), shouldCapitalizeForMode("quotes")));
-    }
+    setSentence(generateModeText(gameMode));
   };
 
   // Listen for keydown events globally
@@ -162,15 +213,9 @@ const TypingTest: React.FC<TypingTestProps> = ({
 
   // Generate sentence on mount or when mode/wordCount/quoteCount changes
   useEffect(() => {
-    if (gameMode === "normal") {
-      setSentence(getRandomNormalSentence(wordCount, shouldCapitalizeForMode("normal")));
-    } else if (gameMode === "explicit") {
-      setSentence(getRandomExplicitSentence(wordCount, 0.4, shouldCapitalizeForMode("explicit")));
-    } else {
-      setSentence(applyCapitalization(generateQuotesText(quoteCount), shouldCapitalizeForMode("quotes")));
-    }
+    setSentence(generateModeText(gameMode));
     setUserInput("");
-  }, [gameMode, wordCount, quoteCount, capitalization]);
+  }, [gameMode, wordCount, quoteCount, capitalization, sentenceStyle, selectedGame]);
 
   // Add a final data point when finished
   useEffect(() => {
@@ -215,10 +260,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
         gameMode={gameMode}
         wordCount={wordCount}
         quoteCount={quoteCount}
+        sentenceStyle={sentenceStyle}
+        selectedGame={selectedGame}
+        gameOptions={gamerGameOptions}
         handleModeChange={(mode) => {
           setGameMode(mode);
           onGameModeChange && onGameModeChange(mode);
         }}
+        handleSentenceStyleChange={setSentenceStyle}
+        handleGameChange={setSelectedGame}
         handleWordCountChange={setWordCount}
         handleQuoteCountChange={setQuoteCount}
         isDisabled={false}
@@ -236,20 +286,28 @@ const TypingTest: React.FC<TypingTestProps> = ({
           theme={theme}
         />
       ) : (
-        <TextDisplay
-          sentence={sentence}
-          userInput={userInput}
-          gameMode={gameMode}
-          normalText={sentence}
-          normalTextOffset={0}
-          paragraphText={""}
-          currentParagraphIdx={0}
-          paragraphAuthors={[]}
-          isFinished={isFinished}
-          onTextClick={() => {}}
-          isActivelyTyping={true}
-          theme={theme}
-        />
+        <div
+          className={`w-full rounded-lg transition-all duration-300 ${
+            gameMode === "gamer"
+              ? `${theme.cardBg} p-5 md:p-8 min-h-[230px] md:min-h-[300px]`
+              : "min-h-[170px]"
+          }`}
+        >
+          <TextDisplay
+            sentence={sentence}
+            userInput={userInput}
+            gameMode={gameMode}
+            normalText={sentence}
+            normalTextOffset={0}
+            paragraphText={""}
+            currentParagraphIdx={0}
+            paragraphAuthors={[]}
+            isFinished={isFinished}
+            onTextClick={() => {}}
+            isActivelyTyping={true}
+            theme={theme}
+          />
+        </div>
       )}
       {/* No input box rendered */}
     </div>

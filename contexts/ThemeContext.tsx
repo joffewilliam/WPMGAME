@@ -210,7 +210,7 @@ export type CapitalizationSettings = {
   enabled: boolean;
   modes: {
     normal: boolean;
-    explicit: boolean;
+    gamer: boolean;
     quotes: boolean;
   };
 };
@@ -231,7 +231,7 @@ export const ThemeContext = createContext<{
     enabled: true,
     modes: {
       normal: true,
-      explicit: true,
+      gamer: true,
       quotes: true
     }
   },
@@ -245,7 +245,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     enabled: true,
     modes: {
       normal: true,
-      explicit: true,
+      gamer: true,
       quotes: true
     }
   });
@@ -313,7 +313,20 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
       const savedCapitalization = localStorage.getItem('capitalization');
       if (savedCapitalization) {
         try {
-          setCapitalization(JSON.parse(savedCapitalization));
+          const parsed = JSON.parse(savedCapitalization) as Partial<CapitalizationSettings> & {
+            modes?: Partial<CapitalizationSettings['modes']> & { explicit?: boolean };
+          };
+
+          const migrated: CapitalizationSettings = {
+            enabled: parsed.enabled ?? true,
+            modes: {
+              normal: parsed.modes?.normal ?? true,
+              gamer: parsed.modes?.gamer ?? parsed.modes?.explicit ?? true,
+              quotes: parsed.modes?.quotes ?? true,
+            }
+          };
+
+          setCapitalization(migrated);
         } catch (e) {
           console.error('Failed to parse capitalization settings');
         }

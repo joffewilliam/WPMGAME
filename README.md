@@ -8,7 +8,7 @@ His perfect spelling and passion outweighed my disgust with what he was typing. 
 
 - **Game Modes**:
   - **Normal Mode**: Standard typing challenge with common words.
-  - **Explicit Mode**: A twist with explicit language for a unique challenge.
+   - **Gamer Mode**: Heated, competitive chat-style prompts for a unique challenge.
   - **Quotes Mode**: Type famous quotes and paragraphs from famous people.
 
 - **Dynamic Themes**:

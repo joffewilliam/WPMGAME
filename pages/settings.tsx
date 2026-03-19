@@ -88,7 +88,7 @@ const SettingsPage = () => {
     }, 2000);
   };
 
-  const handleCapitalizationModeToggle = (mode: 'normal' | 'explicit' | 'quotes') => {
+  const handleCapitalizationModeToggle = (mode: 'normal' | 'gamer' | 'quotes') => {
     setCapitalization({
       ...capitalization,
       modes: {
@@ -230,13 +230,13 @@ const SettingsPage = () => {
                 <div className="flex items-center gap-2">
                   <input
                     type="checkbox"
-                    id="cap-explicit"
-                    checked={capitalization.modes.explicit}
-                    onChange={() => handleCapitalizationModeToggle('explicit')}
+                    id="cap-gamer"
+                    checked={capitalization.modes.gamer}
+                    onChange={() => handleCapitalizationModeToggle('gamer')}
                     disabled={!capitalization.enabled}
                     className="w-4 h-4 rounded"
                   />
-                  <label htmlFor="cap-explicit" className={theme.textColor}>Explicit</label>
+                  <label htmlFor="cap-gamer" className={theme.textColor}>Gamer</label>
                 </div>
                 <div className="flex items-center gap-2">
                   <input
