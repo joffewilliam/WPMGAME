@@ -223,39 +223,124 @@ const gamePhraseBanks: Record<GamerGame, GamerPhraseBank> = {
 };
 
 const normalSentenceStarts = [
-  "I",
-  "We",
-  "My team",
-  "Our squad",
-  "Everyone",
-  "This round",
-  "That play",
+  "The morning train",
+  "A quiet library",
+  "Our small project",
+  "The weekend plan",
+  "My favorite notebook",
+  "A long walk",
+  "The local cafe",
+  "This cooking class",
+  "The city park",
+  "A clear checklist",
+  "The reading group",
+  "Our science club",
+  "The hiking trail",
+  "A gentle breeze",
+  "The coding workshop",
+  "A clean workspace",
+  "The neighborhood market",
+  "A patient teacher",
+  "The art studio",
+  "Our study session",
+  "The evening routine",
+  "A short podcast",
+  "The photo album",
+  "A rainy afternoon",
+  "The community garden",
+  "A steady rhythm",
+  "The practice schedule",
+  "A friendly reminder",
+  "The travel guide",
+  "A simple recipe",
 ];
 
 const normalSentenceVerbs = [
-  "finished",
-  "started",
-  "improved",
-  "missed",
-  "reviewed",
-  "fixed",
-  "planned",
-  "tested",
+  "brings",
+  "creates",
+  "encourages",
+  "inspires",
+  "supports",
+  "improves",
+  "teaches",
+  "builds",
+  "organizes",
+  "explains",
+  "records",
+  "highlights",
+  "strengthens",
+  "guides",
+  "connects",
+  "balances",
+  "refreshes",
+  "sharpens",
+  "expands",
+  "clarifies",
+  "prepares",
+  "simplifies",
+  "brightens",
+  "motivates",
+  "documents",
+  "captures",
+  "transforms",
+  "anchors",
+  "maintains",
+  "refines",
 ];
 
 const normalSentenceEnds = [
-  "with better timing today",
-  "after a quick reset",
-  "because the plan was clear",
-  "during the final minute",
-  "with steady focus",
-  "before moving to the next task",
-  "without overthinking it",
-  "and kept the pace consistent",
+  "a calm pace for the day ahead",
+  "better focus during busy hours",
+  "a clearer path through hard tasks",
+  "small wins that add up over time",
+  "steady progress without extra stress",
+  "new ideas for tomorrow's work",
+  "confidence in each simple step",
+  "space for thoughtful decisions",
+  "strong habits for daily practice",
+  "a helpful rhythm for long projects",
+  "better notes for future review",
+  "more room for creative thinking",
+  "practical goals with clear checkpoints",
+  "consistent quality in each attempt",
+  "useful feedback for the next draft",
+  "a balanced approach to learning",
+  "better timing in each routine",
+  "clear communication across the group",
+  "better planning before deadlines",
+  "more clarity when tasks overlap",
+  "steady effort in quiet moments",
+  "more patience when solving problems",
+  "less friction in everyday workflows",
+  "better preparation for upcoming meetings",
+  "fresh energy for the next session",
+  "simple structure for complex ideas",
+  "reliable results after regular practice",
+  "an easy way to stay organized",
+  "a stronger foundation for future work",
+  "a practical routine that feels sustainable",
 ];
 
 const pick = <T,>(items: T[]): T => {
   return items[Math.floor(Math.random() * items.length)];
+};
+
+const countWords = (text: string): number => {
+  return text.trim().split(/\s+/).filter(Boolean).length;
+};
+
+const buildSentenceBlock = (targetWords: number, makeSentence: () => string): string => {
+  const safeTarget = Math.max(5, targetWords);
+  const parts: string[] = [];
+  let totalWords = 0;
+
+  while (totalWords < safeTarget) {
+    const next = makeSentence();
+    parts.push(next);
+    totalWords += countWords(next);
+  }
+
+  return parts.join(" ");
 };
 
 const capitalizeFirst = (text: string): string => {
@@ -271,15 +356,21 @@ export function getRandomNormalSentence(wordCount: number = 15, capitalize: bool
   return capitalize ? capitalizeFirst(sentence) : sentence;
 }
 
-export function getNormalChatSentence(capitalize: boolean = true): string {
-  const sentence = `${pick(normalSentenceStarts)} ${pick(normalSentenceVerbs)} ${pick(normalSentenceEnds)}.`;
-  return capitalize ? capitalizeFirst(sentence) : sentence.toLowerCase();
+export function getNormalChatSentence(targetWords: number = 25, capitalize: boolean = true): string {
+  const text = buildSentenceBlock(targetWords, () => {
+    return `${pick(normalSentenceStarts)} ${pick(normalSentenceVerbs)} ${pick(normalSentenceEnds)}.`;
+  });
+
+  return capitalize ? capitalizeFirst(text) : text.toLowerCase();
 }
 
-export function getGamerChatSentence(game: GamerGame, capitalize: boolean = true): string {
+export function getGamerChatSentence(game: GamerGame, targetWords: number = 25, capitalize: boolean = true): string {
   const bank = gamePhraseBanks[game];
-  const sentence = `${pick(bank.intros)}, ${pick(bank.issues)}; ${pick(bank.reactions)} so ${pick(bank.fixes)}.`;
-  return capitalize ? capitalizeFirst(sentence) : sentence.toLowerCase();
+  const text = buildSentenceBlock(targetWords, () => {
+    return `${pick(bank.intros)}, ${pick(bank.issues)}. ${pick(bank.reactions)}, so ${pick(bank.fixes)}.`;
+  });
+
+  return capitalize ? capitalizeFirst(text) : text.toLowerCase();
 }
 
 export function getRandomGameWordSentence(

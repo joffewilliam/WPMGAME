@@ -122,14 +122,14 @@ const TypingTest: React.FC<TypingTestProps> = ({
     if (mode === "normal") {
       return withAntiRepeat(historyKey, () =>
         sentenceStyle === "sentences"
-          ? getNormalChatSentence(shouldCapitalize)
+          ? getNormalChatSentence(wordCount, shouldCapitalize)
           : getRandomNormalSentence(wordCount, shouldCapitalize)
       );
     }
 
     return withAntiRepeat(historyKey, () =>
       sentenceStyle === "sentences"
-        ? getGamerChatSentence(selectedGame, shouldCapitalize)
+        ? getGamerChatSentence(selectedGame, wordCount, shouldCapitalize)
         : getRandomGameWordSentence(selectedGame, wordCount, 0.7, shouldCapitalize)
     );
   };
