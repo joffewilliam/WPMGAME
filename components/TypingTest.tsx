@@ -104,6 +104,11 @@ const TypingTest: React.FC<TypingTestProps> = ({
     }
   }, [userInput, sentence]);
 
+  // Notify parent when test starts/stops.
+  useEffect(() => {
+    onTestStatusChange?.(Boolean(startTime) && !isFinished);
+  }, [onTestStatusChange, startTime, isFinished]);
+
   // Calculate stats for results
   const elapsedTime = startTime && endTime ? (endTime - startTime) / 1000 : 0;
   const correctChars = userInput.split('').filter((c, i) => c === sentence[i]).length;
