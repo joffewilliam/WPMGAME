@@ -1,4 +1,4 @@
-# Unnamed Typing Challenge
+# Tilted Typing Test
 
 I currently don't know what to call this. I built this based off a blank tailwind react blank project.
 If you get offended easily, I would avoid this project. I built this after I got cussed out on a video game by someone who was easily typing 140 wpm. 

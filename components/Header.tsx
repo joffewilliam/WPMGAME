@@ -16,7 +16,7 @@ const Header: React.FC<HeaderProps> = ({
       <div className="container mx-auto flex flex-col">
         <div className="flex justify-between items-center">
           <Link href="/" className={`flex items-center ${theme.headerText} hover:opacity-80 transition-opacity`}>
-            <span className="text-xl font-bold">What do I name this thing - typing test</span>
+            <span className="text-xl font-bold">Tilted Typing Test</span>
           </Link>
           
           <nav>

@@ -263,7 +263,7 @@ const SettingsPage = () => {
       </main>
       
       <footer className={`py-4 text-center ${theme.textColor} text-sm opacity-70`}>
-        Tourette's Typing Challenge - Settings
+        Tilted Typing Test - Settings
       </footer>
     </div>
   );
