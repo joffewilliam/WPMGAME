@@ -1,6 +1,6 @@
 /**
  * Sentence Generation Utilities
- * 
+ *
  * Contains functions for generating typing content:
  * - Random normal sentences with common words
  * - Game-specific gamer chat lines for gamer mode
@@ -10,7 +10,13 @@ import { normalWords } from "./normalWords";
 import { quotes, ParagraphQuote } from "./quotes";
 
 export type SentenceStyle = "words" | "sentences";
-export type GamerGame = "counter_strike" | "siege" | "rocket_league" | "league_of_legends" | "valorant" | "overwatch";
+export type GamerGame =
+  | "counter_strike"
+  | "siege"
+  | "rocket_league"
+  | "league_of_legends"
+  | "valorant"
+  | "overwatch";
 
 export const gamerGameOptions: { key: GamerGame; label: string }[] = [
   { key: "counter_strike", label: "Counter-Strike" },
@@ -19,58 +25,6 @@ export const gamerGameOptions: { key: GamerGame; label: string }[] = [
   { key: "league_of_legends", label: "League of Legends" },
   { key: "valorant", label: "Valorant" },
   { key: "overwatch", label: "Overwatch" },
-];
-
-const gamerWords = [
-  "gg",
-  "lag",
-  "ping",
-  "carry",
-  "throw",
-  "rush",
-  "clutch",
-  "tilted",
-  "queue",
-  "respawn",
-  "damage",
-  "focus",
-  "rotate",
-  "defend",
-  "push",
-  "teamfight",
-  "aim",
-  "callout",
-  "camping",
-  "streak",
-  "feed",
-  "comms",
-  "ranked",
-  "sweat",
-  "meta",
-  "bronze",
-  "diamond",
-  "damn",
-  "bruh",
-  "trash",
-  "wtf",
-  "bro",
-  "bricked",
-  "diff",
-  "boom",
-  "unlucky",
-  "choke",
-  "slow",
-  "clean",
-  "messy",
-  "reset",
-  "tilt",
-  "focus",
-  "lock",
-  "frag",
-  "swing",
-  "anchor",
-  "retake",
-  "entry",
 ];
 
 type GamerPhraseBank = {
@@ -85,269 +39,266 @@ const sharedIntros = [
   "Bro",
   "Dude",
   "Yo",
-  "WTF",
-  "No way",
-  "Come on man",
+  "No shot",
+  "Come on",
   "Seriously",
   "Ayo",
-  "Holy shit",
-  "Bruh",
-  "What the fuck",
   "Team",
-  "Fuck sake",
 ];
 
 const sharedReactions = [
-  "I'm actually tilted as fuck rn",
-  "my mental is completely gone",
-  "this is actually painful to watch",
-  "we are throwing so fucking hard",
-  "this team is fucking cooked",
-  "I can't even right now",
-  "this is the worst fucking game I've ever played",
-  "we are griefing ourselves holy shit",
-  "how the fuck do we keep doing this",
-  "I'm so done with this shit",
-  "what the actual fuck",
+  "that round was rough",
+  "we are throwing hard",
+  "this is pure chaos",
+  "my focus is gone",
+  "that was painful to watch",
+  "we are making this way harder than needed",
+  "this lobby is wild",
+  "that play was not it",
 ];
-
-const sharedPureRage = [
-  "Why the fuck am I always on this team",
-  "Actual braindead fucking plays",
-  "Just uninstall at this point",
-  "We don't deserve to win this shit",
-  "This is actually fucking embarrassing",
-  "Everyone is fucking inting",
-  "What the fuck are these decisions",
-  "We lost because of you fucking idiots",
-  "Nice fucking throw",
-  "Report this whole fucking team",
-  "How the fuck are you this bad",
-  "I fucking hate this game",
-  "Jesus fucking Christ",
-  "What a bunch of fucking idiots",
-];
-
-// New array for cuss-heavy rage issues (game-specific below)
-const cussWords = ["fuck", "fucking", "shit", "bullshit", "ass", "dumbass", "jackass", "moron", "retard"]; // retard kept mild context only if you want, but it's borderline — can remove
-
-// Then update the gamePhraseBanks — here's the improved version for all games:
 
 const gamePhraseBanks: Record<GamerGame, GamerPhraseBank> = {
   counter_strike: {
-    gameWords: [ /* keep your existing CS gameWords */ ],
+    gameWords: [
+      "eco", "force", "fullbuy", "entry", "retake", "site", "mid", "connector", "catwalk", "smoke",
+      "flash", "molly", "crosshair", "spray", "tap", "peek", "jiggle", "trade", "anchor", "clutch",
+      "defuse", "save", "awp", "ak", "deagle", "split", "exec", "default", "stack", "timing",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we dry peek the same fucking angle every round",
-      "no one trades the entry and we just fucking feed",
-      "CT rotates are always late as fuck",
-      "we waste all our utility before the fucking exec",
-      "giving up mid for free again like idiots",
-      "bomb is down and we're still chasing fucking frags",
-      "we lose every retake because no one plays together",
-      "lurk timing is completely braindead",
-      "whiffing every anti-eco like it's our first fucking game",
-      "called save and two guys still run it down like morons",
-      "we keep peeking like fucking idiots",
+    issues: [
+      "we dry peeked A main three rounds in a row",
+      "nobody traded first contact on B",
+      "our CT rotates are always late",
+      "we burned utility before the execute",
+      "we keep giving up mid for free",
+      "we had bomb down and still chased kills",
+      "we lose man advantage every retake",
+      "our anti eco discipline is gone",
     ],
     reactions: sharedReactions,
     fixes: [
-      "just fucking trade after contact",
-      "save smokes for the last site hit",
-      "stop solo swinging and hold crossfires you dumbasses",
-      "default for info before we commit",
-      "play the numbers and protect the bomb ffs",
-      "retake as a unit on one timer",
-      "one person calls and we actually fucking listen",
+      "play contact and trade instantly",
+      "save two smokes for the final hit",
+      "hold crossfires and stop solo swinging",
+      "default for info before committing",
+      "play numbers and protect the bomb",
+      "retake together on one timer",
     ],
-    pureRage: sharedPureRage,
   },
-
   siege: {
-    gameWords: [ /* keep existing */ ],
+    gameWords: [
+      "breach", "hardbreach", "drone", "swing", "crossfire", "roam", "anchor", "plant", "defuse", "intel",
+      "vertical", "reinforce", "rotate", "hatch", "utility", "ads", "barbed", "shield", "spawnpeek", "flank",
+      "operator", "site", "setup", "prefire", "refrag", "shotgun", "smoke", "nitro", "camera", "callout",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we push without droning at all like fucking idiots",
-      "hard breach dies with both charges again",
-      "roam clear takes forever and we get no control",
-      "no one watches flank during plant what the fuck",
-      "we reinforced the rotate like complete morons",
-      "swinging one by one into crossfire bullshit",
-      "setup has zero fucking utility denial",
-      "we hand over vertical for free every time",
-      "plant fails because no one holds long angle",
-      "everyone ignores callouts and ego peeks like jackasses",
+    issues: [
+      "we entered without droning anything",
+      "hard breach died with both charges",
+      "roam clear took forever and got no control",
+      "nobody watched flank cams during plant",
+      "we kept swinging one by one into crossfires",
+      "we gave up vertical control for free",
+      "we lost plant because no one held long angle",
+      "everyone ignored callouts and chased kills",
     ],
     reactions: sharedReactions,
     fixes: [
-      "drone before you fucking swing",
-      "protect the hard breach you idiots",
-      "clear utility then execute",
-      "actually set flank watch before plant",
-      "anchor with proper crossfires ffs",
+      "drone first then swing together",
+      "protect hard breach and play objective",
+      "clear utility before the execute",
+      "set two flank watches before plant",
+      "anchor with crossfires on site",
+      "play post plant and stay calm",
     ],
-    pureRage: sharedPureRage,
   },
-
   rocket_league: {
-    gameWords: [ /* keep existing */ ],
+    gameWords: [
+      "boost", "aerial", "ceiling", "flip", "demo", "rotation", "challenge", "shadow", "dribble", "flick",
+      "pinch", "doubletap", "backboard", "wall", "kickoff", "touch", "recover", "clear", "bump", "fifty",
+      "infield", "pass", "goal", "fake", "speedflip", "open", "second", "third", "commit", "whiff",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we double commit every single fucking defensive clear",
-      "no one rotates back post on defense",
-      "third man challenges with zero cover what the fuck",
-      "we blow all boost on worthless fucking touches",
-      "constantly booming the ball back to them like idiots",
-      "whiffing the easiest open nets holy shit",
-      "kickoff cheats are always mistimed bullshit",
-      "panic touching instead of controlling the play",
-      "forcing aerials with no boost like morons",
-      "recoveries are painfully fucking slow",
+    issues: [
+      "we double committed every defensive clear",
+      "nobody rotated back post on defense",
+      "we challenged as third man with no cover",
+      "we burned all boost for low value touches",
+      "we whiffed two free open nets",
+      "kickoff cheats are mistimed every game",
+      "we panic touched instead of controlling",
+      "our recoveries are too slow",
     ],
     reactions: sharedReactions,
     fixes: [
-      "rotate back and trust your fucking tm8s",
-      "don't commit if second man has it",
-      "control the first touch you dumbass",
-      "call your boost when it's low ffs",
+      "rotate back post and trust teammates",
+      "leave if second man has the play",
+      "control first touch before booming",
+      "call out when you have low boost",
+      "stop diving as third man",
+      "focus on small pads and positioning",
     ],
-    pureRage: sharedPureRage.concat([
-      "What a save! (x3) you fucking idiot",
-      "Nice shot! (x3) dumbass",
-      "Own goal merchant",
-    ]),
   },
-
   league_of_legends: {
-    gameWords: [ /* keep existing */ ],
+    gameWords: [
+      "lane", "wave", "jungle", "gank", "roam", "objective", "dragon", "baron", "herald", "vision",
+      "ward", "reset", "tp", "flash", "ult", "cooldown", "skirmish", "teamfight", "dive", "kiting",
+      "frontline", "backline", "macro", "cs", "gold", "tempo", "prio", "split", "engage", "peel",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we fight dragon with zero fucking vision",
-      "everyone chases mid while sides crash what the fuck",
-      "engage with no cooldown tracking like braindead",
-      "burn flashes before objective again",
-      "jungle invades with no prio bullshit",
-      "forcing fights when we're down numbers like idiots",
-      "no peel for backline in teamfights",
-      "giving baron for one random fucking tower",
-      "overstaying on 100 hp like morons",
-      "reset timings are completely fucked",
+    issues: [
+      "we fought dragon with no vision setup",
+      "side waves crashed while everyone chased mid",
+      "our engage happened without cooldown tracking",
+      "we burned flashes before objective spawn",
+      "jungle invades happened with no lane priority",
+      "we kept forcing fights down numbers",
+      "nobody peeled for backline in teamfights",
+      "we over stayed after skirmish",
     ],
     reactions: sharedReactions,
     fixes: [
-      "set vision before objective ffs",
-      "catch waves then group you idiots",
-      "track cooldowns before going in",
+      "set vision one minute before objective",
+      "catch side waves then group",
+      "track cooldowns before engaging",
       "play around numbers and prio",
-      "peel your fucking carries",
+      "peel carries and kite back",
+      "reset together and spend gold",
     ],
-    pureRage: sharedPureRage.concat([
-      "jg diff",
-      "bot gap fucking hell",
-      "mid is running it down",
-      "report jungle this idiot",
-      "ff 15 this shit is over",
-    ]),
   },
-
   valorant: {
-    gameWords: [ /* keep existing */ ],
+    gameWords: [
+      "entry", "site", "retake", "rotate", "lurker", "anchor", "utility", "smoke", "flash", "molly",
+      "dash", "drone", "trade", "eco", "force", "fullbuy", "default", "exec", "post", "orb",
+      "ult", "operator", "crosshair", "angle", "swing", "timing", "comms", "stack", "fake", "clutch",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we hit site before any utility even fucking lands",
-      "lurker timing never matches the exec what the fuck",
-      "no one trades first contact again",
-      "post plant lost to ego peeks bullshit",
-      "giving up map control for nothing like idiots",
-      "retake paths are completely disconnected",
-      "over rotating on every fake like morons",
-      "force buy and ruin economy again",
-      "everyone calls a different fucking plan",
-      "ignoring spike to chase kills what the fuck",
+    issues: [
+      "we hit site before utility even landed",
+      "our lurker timing never synced with execute",
+      "nobody traded first contact",
+      "we lost post plant from ego peeks",
+      "we keep giving up map control for free",
+      "our retake pathing is disconnected",
+      "we over rotate on every fake",
+      "we force bought and broke economy again",
     ],
     reactions: sharedReactions,
     fixes: [
-      "layer utility before swinging you dumbasses",
-      "trade first contact ffs",
-      "play post plant safely",
-      "hold map control you idiots",
-      "buy together and respect eco",
+      "layer utility before the swing",
+      "trade first contact instantly",
+      "play post plant from safe lines",
+      "retake with one clear countdown",
+      "buy together and respect economy",
+      "call one primary plan each round",
     ],
-    pureRage: sharedPureRage,
   },
-
   overwatch: {
-    gameWords: [ /* keep existing */ ],
+    gameWords: [
+      "payload", "point", "ultimate", "cooldown", "support", "tank", "dps", "flank", "peel", "engage",
+      "disengage", "stagger", "touch", "contest", "highground", "los", "focus", "dive", "brawl", "poke",
+      "position", "tempo", "combo", "anti", "immortality", "nano", "blade", "shatter", "kit", "reset",
+    ],
     intros: sharedIntros,
-    rageIssues: [
-      "we burn three ults for one fucking fight",
-      "backline dove with zero peel what the fuck",
-      "we stagger in one by one like idiots",
-      "no one contests high ground",
-      "cooldowns wasted before engage bullshit",
-      "chasing picks instead of objective",
-      "supports have no sightlines at all",
-      "dive with zero follow up damage",
-      "touching point super late every defense",
-      "target focus switches every two fucking seconds",
+    issues: [
+      "we used three ults to win one easy fight",
+      "backline got dove with no peel",
+      "we staggered one by one after wipe",
+      "nobody contested high ground early",
+      "cooldowns got burned before engage",
+      "we ignored objective while chasing picks",
+      "our supports had no sightlines",
+      "target focus switched every few seconds",
     ],
     reactions: sharedReactions,
     fixes: [
-      "engage with one clear target ffs",
-      "save ults for the next fight",
-      "reset fast and avoid stagger you morons",
-      "hold high ground",
-      "peel supports first you dumbasses",
+      "engage together with one target call",
+      "save ults for the next real fight",
+      "reset fast and avoid stagger",
+      "hold high ground and force angles",
+      "peel for supports before chasing",
+      "play objective first then cleanup",
     ],
-    pureRage: sharedPureRage.concat([
-      "Tank diff",
-      "Supports are throwing hard",
-      "DPS ego peeking again",
-    ]),
   },
 };
 
-// Updated rage templates to allow more natural swearing
-const rageTemplates = [
-  "{intro}, {rageIssue}. {reaction}.",
-  "{intro} {rageIssue} again?? {reaction} so {fix}.",
-  "{rageIssue}... {reaction}. Just {fix} ffs.",
-  "{intro}, why the fuck do we always {rageIssue.toLowerCase()}?",
-  "{pureRage}.",
-  "{rageIssue}. {pureRage}.",
-  "We are so fucking {reaction.split(' ').pop()}. {rageIssue}.",
-  "{intro} this is fucking {reaction.split(' ').slice(-3).join(' ')}.",
+const normalSentenceStarts = [
+  "I",
+  "We",
+  "My team",
+  "Our squad",
+  "Everyone",
+  "This round",
+  "That play",
 ];
 
-const pick = <T,>(items: T[]): T => items[Math.floor(Math.random() * items.length)];
+const normalSentenceVerbs = [
+  "finished",
+  "started",
+  "improved",
+  "missed",
+  "reviewed",
+  "fixed",
+  "planned",
+  "tested",
+];
 
-const capitalizeFirst = (text: string): string => 
-  text.charAt(0).toUpperCase() + text.slice(1);
+const normalSentenceEnds = [
+  "with better timing today",
+  "after a quick reset",
+  "because the plan was clear",
+  "during the final minute",
+  "with steady focus",
+  "before moving to the next task",
+  "without overthinking it",
+  "and kept the pace consistent",
+];
 
-// Updated main function
+const pick = <T,>(items: T[]): T => {
+  return items[Math.floor(Math.random() * items.length)];
+};
+
+const capitalizeFirst = (text: string): string => {
+  return text.charAt(0).toUpperCase() + text.slice(1);
+};
+
+export function getRandomNormalSentence(wordCount: number = 15, capitalize: boolean = true): string {
+  let sentence = "";
+  for (let i = 0; i < wordCount; i++) {
+    const randomWord = normalWords[Math.floor(Math.random() * normalWords.length)];
+    sentence += randomWord + (i < wordCount - 1 ? " " : "");
+  }
+  return capitalize ? capitalizeFirst(sentence) : sentence;
+}
+
+export function getNormalChatSentence(capitalize: boolean = true): string {
+  const sentence = `${pick(normalSentenceStarts)} ${pick(normalSentenceVerbs)} ${pick(normalSentenceEnds)}.`;
+  return capitalize ? capitalizeFirst(sentence) : sentence.toLowerCase();
+}
+
 export function getGamerChatSentence(game: GamerGame, capitalize: boolean = true): string {
   const bank = gamePhraseBanks[game];
-  
-  // 35% chance for pure short rage (very common when tilted)
-  if (Math.random() < 0.35) {
-    let rageLine = pick(bank.pureRage);
-    if (Math.random() < 0.4) rageLine += ".";
-    if (Math.random() < 0.25) rageLine = rageLine.toUpperCase();
-    return capitalize ? capitalizeFirst(rageLine) : rageLine.toLowerCase();
-  }
-
-  const template = pick(rageTemplates);
-  let sentence = template
-    .replace("{intro}", pick(bank.intros))
-    .replace("{rageIssue}", pick(bank.rageIssues))
-    .replace("{reaction}", pick(bank.reactions))
-    .replace("{fix}", pick(bank.fixes))
-    .replace("{pureRage}", pick(bank.pureRage));
-
-  // Occasional typing quirks for realism
-  if (Math.random() < 0.3) sentence += " ...";
-  if (Math.random() < 0.2) sentence += "!!!!";
-  if (Math.random() < 0.15) sentence = sentence.toUpperCase();
-
+  const sentence = `${pick(bank.intros)}, ${pick(bank.issues)}; ${pick(bank.reactions)} so ${pick(bank.fixes)}.`;
   return capitalize ? capitalizeFirst(sentence) : sentence.toLowerCase();
+}
+
+export function getRandomGameWordSentence(
+  game: GamerGame,
+  wordCount: number = 15,
+  gamerRatio: number = 0.65,
+  capitalize: boolean = true
+): string {
+  const gameWords = gamePhraseBanks[game].gameWords;
+  let sentence = "";
+  for (let i = 0; i < wordCount; i++) {
+    const useGamerWord = Math.random() < gamerRatio;
+    const wordPool = useGamerWord ? gameWords : normalWords;
+    const randomWord = wordPool[Math.floor(Math.random() * wordPool.length)];
+    sentence += randomWord + (i < wordCount - 1 ? " " : "");
+  }
+  return capitalize ? capitalizeFirst(sentence) : sentence;
+}
+
+export function getRandomParagraph(): ParagraphQuote {
+  return quotes[Math.floor(Math.random() * quotes.length)];
 }
