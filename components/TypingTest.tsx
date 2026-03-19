@@ -37,6 +37,10 @@ const upsertDataPoint = (prev: DataPoint[], point: DataPoint): DataPoint[] => {
   return next.sort((a, b) => a.second - b.second);
 };
 
+const generateQuotesText = (quoteCount: number): string => {
+  return Array.from({ length: quoteCount }, () => getRandomParagraph().text).join(" ");
+};
+
 type TypingTestProps = {
   gameMode?: GameMode;
   onGameModeChange?: (mode: GameMode) => void;
@@ -121,8 +125,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
     } else if (gameMode === "explicit") {
       setSentence(getRandomExplicitSentence(wordCount));
     } else {
-      const quoteObj = getRandomParagraph();
-      setSentence(quoteObj.text);
+      setSentence(generateQuotesText(quoteCount));
     }
   };
 
@@ -147,7 +150,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
     } else if (gameMode === "explicit") {
       setSentence(getRandomExplicitSentence(wordCount));
     } else {
-      setSentence(getRandomParagraph().text);
+      setSentence(generateQuotesText(quoteCount));
     }
     setUserInput("");
   }, [gameMode, wordCount, quoteCount]);
