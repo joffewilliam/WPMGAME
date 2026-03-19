@@ -9,7 +9,11 @@
 
 export function calculateWPM(charactersTyped: number, timeInSeconds: number) {
   // WPM = (characters / 5) / (time in minutes)
-  return Math.round((charactersTyped / 5 / (timeInSeconds / 60)) || 0);
+  if (!Number.isFinite(timeInSeconds) || timeInSeconds <= 0) {
+    return 0;
+  }
+
+  return Math.round(charactersTyped / 5 / (timeInSeconds / 60));
 }
 
 /**
