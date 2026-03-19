@@ -41,6 +41,10 @@ const generateQuotesText = (quoteCount: number): string => {
   return Array.from({ length: quoteCount }, () => getRandomParagraph().text).join(" ");
 };
 
+const applyCapitalization = (text: string, shouldCapitalize: boolean): string => {
+  return shouldCapitalize ? text : text.toLowerCase();
+};
+
 type TypingTestProps = {
   gameMode?: GameMode;
   onGameModeChange?: (mode: GameMode) => void;
@@ -52,7 +56,7 @@ const TypingTest: React.FC<TypingTestProps> = ({
   onGameModeChange,
   onTestStatusChange 
 }) => {
-  const { theme } = useTheme();
+  const { theme, capitalization } = useTheme();
   const [gameMode, setGameMode] = useState<GameMode>(externalGameMode || "normal");
   const [wordCount, setWordCount] = useState<number>(25);
   const [quoteCount, setQuoteCount] = useState<number>(3);
@@ -64,6 +68,14 @@ const TypingTest: React.FC<TypingTestProps> = ({
   const [startTime, setStartTime] = useState<number | null>(null);
   const [endTime, setEndTime] = useState<number | null>(null);
   const [typingData, setTypingData] = useState<DataPoint[]>([]);
+
+  const shouldCapitalizeForMode = (mode: GameMode): boolean => {
+    if (!capitalization.enabled) {
+      return false;
+    }
+
+    return capitalization.modes[mode];
+  };
 
   // Start timer on first input
   useEffect(() => {
@@ -126,11 +138,11 @@ const TypingTest: React.FC<TypingTestProps> = ({
     setTypingData([]);
     // Regenerate sentence
     if (gameMode === "normal") {
-      setSentence(getRandomNormalSentence(wordCount));
+      setSentence(getRandomNormalSentence(wordCount, shouldCapitalizeForMode("normal")));
     } else if (gameMode === "explicit") {
-      setSentence(getRandomExplicitSentence(wordCount));
+      setSentence(getRandomExplicitSentence(wordCount, 0.4, shouldCapitalizeForMode("explicit")));
     } else {
-      setSentence(generateQuotesText(quoteCount));
+      setSentence(applyCapitalization(generateQuotesText(quoteCount), shouldCapitalizeForMode("quotes")));
     }
   };
 
@@ -151,14 +163,14 @@ const TypingTest: React.FC<TypingTestProps> = ({
   // Generate sentence on mount or when mode/wordCount/quoteCount changes
   useEffect(() => {
     if (gameMode === "normal") {
-      setSentence(getRandomNormalSentence(wordCount));
+      setSentence(getRandomNormalSentence(wordCount, shouldCapitalizeForMode("normal")));
     } else if (gameMode === "explicit") {
-      setSentence(getRandomExplicitSentence(wordCount));
+      setSentence(getRandomExplicitSentence(wordCount, 0.4, shouldCapitalizeForMode("explicit")));
     } else {
-      setSentence(generateQuotesText(quoteCount));
+      setSentence(applyCapitalization(generateQuotesText(quoteCount), shouldCapitalizeForMode("quotes")));
     }
     setUserInput("");
-  }, [gameMode, wordCount, quoteCount]);
+  }, [gameMode, wordCount, quoteCount, capitalization]);
 
   // Add a final data point when finished
   useEffect(() => {
