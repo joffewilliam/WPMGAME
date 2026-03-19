@@ -24,6 +24,19 @@ import type { ParagraphQuote } from "../data/quotes";
 export type GameMode = "explicit" | "normal" | "quotes";
 export type DataPoint = { second: number; wpm: number; accuracy: number; errors: number; };
 
+const upsertDataPoint = (prev: DataPoint[], point: DataPoint): DataPoint[] => {
+  const next = [...prev];
+  const existingIndex = next.findIndex((entry) => entry.second === point.second);
+
+  if (existingIndex >= 0) {
+    next[existingIndex] = point;
+  } else {
+    next.push(point);
+  }
+
+  return next.sort((a, b) => a.second - b.second);
+};
+
 type TypingTestProps = {
   gameMode?: GameMode;
   onGameModeChange?: (mode: GameMode) => void;
@@ -63,17 +76,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
       const elapsed = (now - startTime) / 1000;
       const correctChars = userInput.split('').filter((c, i) => c === sentence[i]).length;
       const errors = userInput.length - correctChars;
-      setTypingData((prev) => ({
-        ...prev,
-        [
-          Math.floor(elapsed)
-        ]: {
-          second: Math.floor(elapsed),
+      const second = Math.floor(elapsed);
+      setTypingData((prev) =>
+        upsertDataPoint(prev, {
+          second,
           wpm: calculateWPM(userInput.length, elapsed),
           accuracy: calculateAccuracy(correctChars, errors),
-          errors: errors,
-        }
-      }));
+          errors,
+        })
+      );
     }, 1000);
     return () => clearInterval(interval);
   }, [startTime, userInput, isFinished, sentence]);
@@ -147,17 +158,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
       const elapsed = (endTime - startTime) / 1000;
       const correctChars = userInput.split('').filter((c, i) => c === sentence[i]).length;
       const errors = userInput.length - correctChars;
-      setTypingData((prev) => ({
-        ...prev,
-        [
-          Math.ceil(elapsed)
-        ]: {
-          second: Math.ceil(elapsed),
+      const second = Math.ceil(elapsed);
+      setTypingData((prev) =>
+        upsertDataPoint(prev, {
+          second,
           wpm: calculateWPM(userInput.length, elapsed),
           accuracy: calculateAccuracy(correctChars, errors),
-          errors: errors,
-        }
-      }));
+          errors,
+        })
+      );
     }
   }, [isFinished, startTime, endTime, userInput, sentence]);
 
@@ -168,17 +177,15 @@ const TypingTest: React.FC<TypingTestProps> = ({
     const elapsed = (now - startTime) / 1000;
     const correctChars = userInput.split('').filter((c, i) => c === sentence[i]).length;
     const errors = userInput.length - correctChars;
-    setTypingData((prev) => ({
-      ...prev,
-      [
-        Math.ceil(elapsed)
-      ]: {
-        second: Math.ceil(elapsed),
+    const second = Math.ceil(elapsed);
+    setTypingData((prev) =>
+      upsertDataPoint(prev, {
+        second,
         wpm: calculateWPM(userInput.length, elapsed),
         accuracy: calculateAccuracy(correctChars, errors),
-        errors: errors,
-      }
-    }));
+        errors,
+      })
+    );
     // eslint-disable-next-line
   }, [userInput]);
 
